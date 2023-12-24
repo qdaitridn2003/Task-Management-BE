@@ -1,0 +1,69 @@
+// How to create a path for api endpoint
+
+"<path>": {
+    "<http-methods>": {
+        "tags": "<tag>",
+        "description": "<description>",
+        "parameters": [<parameter>],
+        "responses": {
+            "200": {
+                "description": "OK"
+            }
+        }
+    }
+}
+
+# <http-methods> : GET, POST, PUT, DELETE, PATCH
+# <tag> : Must be the same name when you want to group it
+
+// How to create a <parameter>
+
+# For header
+{
+    "in": "header",
+    "name": "<name>",
+    "type": "<type>",
+    "example": "<example>", (optional)
+    "description": "<description>" (optional)
+    "required": <true | false> (optional)
+},
+
+# For path
+{
+    "in": "path",
+    "name": "<name>",
+    "type": "<type>",
+    "example": "<example>", (optional)
+    "description": "<description>" (optional)
+    "required": <true | false> (optional)
+}
+
+# For query
+{
+    "in": "query",
+    "name": "<name>",
+    "type": "<type>",
+    "example": "<example>", (optional)
+    "description": "<description>" (optional)
+    "required": <true | false> (optional)
+}
+
+# For form data it mean user can test it in swagger
+{
+    "in": "formData",
+    "name": "<name>",
+    "type": "<type>",
+    "example": "<example>", (optional)
+    "description": "<description>" (optional)
+    "required": <true | false> (optional)
+}
+
+# For file
+{
+    "in": "formData",
+    "name": "<name>",
+    "type": "file",
+    "example": "<example>", (optional)
+    "description": "<description>" (optional)
+    "required": <true | false> (optional)
+}
