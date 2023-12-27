@@ -1,4 +1,4 @@
-import Jwt from 'jsonwebtoken';
+import Jwt, { JwtPayload } from 'jsonwebtoken';
 import { ApiConfig } from '../../configs';
 
 type JsonWebTokenPayloadType = string | object | Buffer;
@@ -49,7 +49,7 @@ const jwtHandler = {
     },
 
     decode: (token: string) => {
-        return Jwt.decode(token);
+        return Jwt.decode(token) as Jwt.JwtPayload;
     },
 };
 

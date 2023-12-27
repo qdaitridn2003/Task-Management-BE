@@ -1,9 +1,270 @@
 {
     "swagger": "2.0",
     "info": {
-      "title": "API Routing Documentation",
-      "description": "",
-      "version": "1.0"
+        "title": "API Routing Documentation",
+        "description": "",
+        "version": "1.0"
     },
-    "paths": {}
+    "paths": {
+        "/api/auth/sign-up": {
+            "post": {
+                "tags": ["Auth"],
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "username",
+                        "type": "string",
+                        "example": "example@mail.com",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "type": "string",
+                        "example": "123456",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "confirmPassword",
+                        "type": "string",
+                        "example": "123456",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "otp",
+                        "type": "string",
+                        "example": "123456",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "otpSecret",
+                        "type": "string",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "description": "",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+
+        "/api/auth/send-otp/confirm-email": {
+            "post": {
+                "tags": ["Auth"],
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "username",
+                        "type": "string",
+                        "example": "example@mail.com",
+                        "description": "",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/auth/verify-otp": {
+            "post": {
+                "tags": ["Auth"],
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "otp",
+                        "type": "string",
+                        "example": "123456",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "otpSecret",
+                        "type": "string",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "description": "",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/auth/forgotpassword": {
+            "post": {
+                "tags": ["Auth"],
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "username",
+                        "type": "string",
+                        "example": "example@mail.com",
+                        "description": "",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/auth/resend-otp/confirm-email": {
+            "post": {
+                "tags": ["Auth"],
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "username",
+                        "type": "string",
+                        "example": "example@mail.com",
+                        "description": "",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/auth/resend-otp/reset-password": {
+            "post": {
+                "tags": ["Auth"],
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "username",
+                        "type": "string",
+                        "example": "example@mail.com",
+                        "description": "",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/auth/verify-otp/reset-password": {
+            "post": {
+                "tags": ["Auth"],
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "otp",
+                        "type": "string",
+                        "example": "123456",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "otpSecret",
+                        "type": "string",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "description": "",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/auth/reset-password": {
+            "put": {
+                "tags": ["Auth"],
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "username",
+                        "type": "string",
+                        "example": "example@mail.com",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "type": "string",
+                        "example": "123456",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "confirmPassword",
+                        "type": "string",
+                        "example": "123456",
+                        "description": "",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/auth/sign-in": {
+            "post": {
+                "tags": ["Auth"],
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "username",
+                        "type": "string",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "type": "string",
+                        "description": "",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    }
 }

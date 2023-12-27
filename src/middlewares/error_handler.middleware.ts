@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ErrorPayloadType } from '../types';
+import { ZodError } from 'zod';
 import { JsonWebTokenError } from 'jsonwebtoken';
 
 const errorHandler = (
@@ -26,6 +27,17 @@ const errorHandler = (
                 })
                 .flush();
         }
+    }
+    if (errorPayload instanceof ZodError) {
+        const listErrors = errorPayload.errors;
+        const listErrorMessage = listErrors.map((error: any) => error.message);
+        return res
+            .status(errorPayload.statusCode ?? 500)
+            .json({
+                status: 'Xảy ra lỗi',
+                message: listErrorMessage.length > 1 ? listErrorMessage : listErrorMessage[0],
+            })
+            .flush();
     } else {
         return res
             .status(errorPayload.statusCode ?? 500)
