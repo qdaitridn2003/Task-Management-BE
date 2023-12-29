@@ -8,8 +8,6 @@ const authSchema = new Schema<AuthSchema>(
         username: { type: Schema.Types.String },
         password: { type: Schema.Types.String },
         expoToken: [{ type: Schema.Types.String, default: null }],
-        isVerified: { type: Schema.Types.Boolean, default: null },
-        verifiedAt: { type: Schema.Types.Date, default: null },
     },
     { timestamps: true },
 );

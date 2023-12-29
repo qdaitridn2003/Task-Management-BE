@@ -110,7 +110,7 @@
                 }
             }
         },
-        "/api/auth/forgotpassword": {
+        "/api/auth/forgot-password": {
             "post": {
                 "tags": ["Auth"],
                 "description": "",
@@ -257,6 +257,117 @@
                         "type": "string",
                         "description": "",
                         "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/auth/change-password": {
+            "put": {
+                "tags": ["Auth"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "oldPassword",
+                        "type": "string",
+                        "example": "123456",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "newPassword",
+                        "type": "string",
+                        "example": "123456",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "confirmPassword",
+                        "type": "string",
+                        "example": "123456",
+                        "description": "",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+
+        "/api/employee/register-employee-profile": {
+            "put": {
+                "tags": ["Employee"],
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "username",
+                        "type": "string",
+                        "example": "example@mail.com",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "authId",
+                        "type": "string",
+                        "example": "1",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "fullName",
+                        "type": "string",
+                        "example": "example",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "dateOfBirth",
+                        "type": "string",
+                        "example": "2023-11-11",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "phoneNumber",
+                        "type": "string",
+                        "example": "0123456789",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "gender",
+                        "type": "string",
+                        "example": "male | female",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "address",
+                        "type": "string",
+                        "example": "123 St Miami",
+                        "description": ""
                     }
                 ],
                 "responses": {

@@ -1,19 +1,10 @@
-import { SuccessPayloadType } from './../../types/response.type';
 import { Request, Response, NextFunction } from 'express';
-import {
-    AuthValidator,
-    JwtHandler,
-    NodeMailerHandler,
-    OtpHandler,
-    createHttpSuccess,
-} from '../../utilities';
-import { AuthQuery, EmployeeQuery } from '../../models';
+import { AuthValidator, NodeMailerHandler, OtpHandler, createHttpSuccess } from '../../utilities';
+import { AuthQuery, EmployeeQuery, RoleQuery } from '../../models';
 import createHttpError from 'http-errors';
 import hashHandler from '../../utilities/handlers/hash.handler';
 import jwtHandler from '../../utilities/handlers/jwt.handler';
 import { OtpType } from '../../common';
-import otpHandler from '../../utilities/handlers/otp.handler';
-import { RoleSchema } from '../../types';
 
 export const signIn = async (req: Request, res: Response, next: NextFunction) => {
     const { username, password } = req.body;
@@ -24,32 +15,31 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
         const comparedResult = hashHandler.compare(password, result.password);
         if (!comparedResult) return next(createHttpError(400, 'Password is not correct'));
 
-        const foundEmployee = await EmployeeQuery.findOne({ auth: result._id });
+        const foundEmployee = await EmployeeQuery.findOne({ authId: result._id });
         if (!foundEmployee) {
             return next(
                 createHttpSuccess({
                     statusCode: 200,
-                    data: { auth_id: result._id, isFirstLogin: true },
-                    message: 'You have successfully',
-                }),
-            );
-        } else {
-            const accessToken = await jwtHandler.init(
-                {
-                    auth_id: result._id,
-                    employee_id: foundEmployee._id,
-                    identify: (result.role as RoleSchema).name,
-                },
-                'access',
-            );
-            return next(
-                createHttpSuccess({
-                    statusCode: 200,
-                    data: { accessToken },
+                    data: { username, authId: result._id },
                     message: 'You have successfully',
                 }),
             );
         }
+
+        const accessToken = await jwtHandler.init(
+            {
+                auth_id: result._id,
+                employee_id: foundEmployee._id,
+            },
+            'access',
+        );
+        return next(
+            createHttpSuccess({
+                statusCode: 200,
+                data: { accessToken },
+                message: 'You have successfully',
+            }),
+        );
     } catch (error) {
         console.log(error);
     }
@@ -66,22 +56,31 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
     if (!validate.success) {
         return next(validate.error);
     }
-    const { check } = OtpHandler.verify(otpSecret, otp);
-    if (!check) {
-        return next(createHttpError(401, 'Otp was expired or invalid'));
-    }
     try {
+        const { check } = OtpHandler.verify(otpSecret, otp);
+        if (!check) {
+            return next(createHttpError(401, 'Otp đã hết hạn hoặc không tồn tại'));
+        }
+
+        const foundRole = await RoleQuery.findOne({ name: 'Employee' });
+        if (!foundRole) {
+            return next(createHttpError(400, 'Role không tồn tại'));
+        }
+
         const hashPassword = hashHandler.init(password);
-        const result = await AuthQuery.create({
+        await AuthQuery.create({
             username,
             password: hashPassword,
+            role: foundRole?._id,
             isVerified: true,
             verifiedAt: new Date(),
         });
-        next(
+
+        await EmployeeQuery.create({ email: username });
+        return next(
             createHttpSuccess({
                 statusCode: 200,
-                data: result ?? {},
+                data: {},
                 message: 'You have successfully',
             }),
         );
@@ -98,20 +97,13 @@ export const sendOtp = async (req: Request, res: Response, next: NextFunction) =
     }
 
     try {
-        const otpSecret = await jwtHandler.init(
-            {
-                type: OtpType.ConfirmEmail,
-            },
-            'otp',
-        );
-        // console.log(otpSecret);
+        const otpSecret = await OtpHandler.initSecret({ type: OtpType.ConfirmEmail });
         const otp = OtpHandler.initOtp(otpSecret);
         NodeMailerHandler.sendForConfirmEmail(username, otp);
-
         return next(
             createHttpSuccess({
                 statusCode: 200,
-                data: { otpSecret } ?? {},
+                data: { otpSecret },
                 message: 'You have successfully send otp',
             }),
         );
@@ -122,28 +114,22 @@ export const sendOtp = async (req: Request, res: Response, next: NextFunction) =
 
 export const resendOtpForConfirmEmail = async (req: Request, res: Response, next: NextFunction) => {
     const { username } = req.body;
-
-    const foundAccount = await AuthQuery.findOne({ username });
-    if (!foundAccount) {
-        return next(createHttpError(400, 'Account not exist'));
+    const existingEmailAccount = await AuthQuery.findOne({ username });
+    if (existingEmailAccount) {
+        return next(createHttpError(400, 'Account already exists'));
     }
 
     try {
-        const otpSecret = await jwtHandler.init(
-            {
-                auth_id: foundAccount._id,
-                type: OtpType.ConfirmEmail,
-            },
-            'otp',
-        );
-        // console.log(otpSecret);
+        const otpSecret = await OtpHandler.initSecret({
+            type: OtpType.ConfirmEmail,
+        });
         const otp = OtpHandler.initOtp(otpSecret);
         NodeMailerHandler.sendForConfirmEmail(username, otp);
 
         return next(
             createHttpSuccess({
                 statusCode: 200,
-                data: { otpSecret } ?? {},
+                data: { otpSecret },
                 message: 'You have successfully send otp',
             }),
         );
@@ -165,21 +151,17 @@ export const resendOtpForConfirmResetPass = async (
     }
 
     try {
-        const otpSecret = await jwtHandler.init(
-            {
-                auth_id: foundAccount._id,
-                type: OtpType.ResetPassword,
-            },
-            'otp',
-        );
-        // console.log(otpSecret);
+        const otpSecret = await OtpHandler.initSecret({
+            auth_id: foundAccount._id,
+            type: OtpType.ResetPassword,
+        });
         const otp = OtpHandler.initOtp(otpSecret);
         NodeMailerHandler.sendForResetPassword(username, otp);
 
         return next(
             createHttpSuccess({
                 statusCode: 200,
-                data: { otpSecret } ?? {},
+                data: { otpSecret },
                 message: 'You have successfully send otp',
             }),
         );
@@ -196,16 +178,16 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
         return next(createHttpError(400, 'Account not exist'));
     }
 
-    const otpSecret = await JwtHandler.init(
-        { auth_id: foundAccount?._id, type: OtpType.ResetPassword },
-        'otp',
-    );
+    const otpSecret = await OtpHandler.initSecret({
+        auth_id: foundAccount?._id,
+        type: OtpType.ResetPassword,
+    });
     const otp = OtpHandler.initOtp(otpSecret);
     NodeMailerHandler.sendForResetPassword(username, otp);
     return next(
         createHttpSuccess({
             statusCode: 200,
-            data: { otpSecret } ?? {},
+            data: { otpSecret },
             message: 'You have successfully reset your password',
         }),
     );
@@ -252,4 +234,34 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
     }
 };
 
-export const changePassword = async (req: Request, res: Response, next: NextFunction) => {};
+export const changePassword = async (req: Request, res: Response, next: NextFunction) => {
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const { auth_id } = res.locals;
+    try {
+        const foundAccount = await AuthQuery.findOne({ _id: auth_id });
+        if (!foundAccount) return next(createHttpError(400, 'Account is not exist'));
+
+        const validate = AuthValidator.changePasswordValidator.safeParse({
+            oldPassword,
+            newPassword,
+            confirmPassword,
+        });
+        if (!validate.success) return next(validate.error);
+
+        const comparePassword = hashHandler.compare(oldPassword, foundAccount.password);
+        if (!comparePassword) return next(createHttpError(400, 'Old password is not correct'));
+
+        const hashNewPassword = hashHandler.init(newPassword);
+
+        await AuthQuery.updateOne({ _id: auth_id }, { password: hashNewPassword });
+        return next(
+            createHttpSuccess({
+                statusCode: 200,
+                data: {},
+                message: 'You have successfully',
+            }),
+        );
+    } catch (error) {
+        console.log(error);
+    }
+};
