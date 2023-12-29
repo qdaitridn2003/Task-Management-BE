@@ -47,3 +47,33 @@ export const registerEmployeeProfile = async (req: Request, res: Response, next:
         console.log(error);
     }
 };
+// export const getEmployeeProfile = async (req: Request, res: Response, next: NextFunction) => {
+//     const { employee_id } = res.locals;
+//     const { _id } = req.params;
+//     console.log(employee_id);
+//     try {
+//         const foundEmployee = await EmployeeQuery.findOne({
+//             _id: _id ? _id : employee_id,
+//         })
+//             .populate({
+//                 path: 'authId',
+//                 select: { _id: _id, username: true, role: true },
+//                 populate: {
+//                     path: 'role',
+//                     select: { _id: true, name: true },
+//                 },
+//             })
+//             .select({ createdAt: false, updatedAt: false, __v: false });
+//         if (!foundEmployee) return next(createHttpError(404, 'Not found employee'));
+
+//         return next(
+//             createHttpSuccess({
+//                 statusCode: 200,
+//                 data: { employee: foundEmployee },
+//                 message: 'Đã thành công',
+//             }),
+//         );
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
