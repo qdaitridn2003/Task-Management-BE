@@ -16,7 +16,7 @@ const authorization = async (req: Request, res: Response, next: NextFunction) =>
         const verifiedResult = await JwtHandler.verify(token as string, 'access');
         res.locals.auth_id = verifiedResult.auth_id;
         res.locals.employee_id = verifiedResult.employee_id;
-        // res.locals.identify = verifiedResult.identify;
+        res.locals.role_id = verifiedResult.role_id;
         return next();
     } catch (error) {
         return next(error);

@@ -6,7 +6,7 @@ import { uuidHelper } from '../../utilities';
 const employeeSchema = new Schema<EmployeeSchema>(
     {
         _id: { type: Schema.Types.ObjectId, auto: true },
-        authId: { type: Schema.Types.ObjectId, ref: 'auth', default: null },
+        auth: { type: Schema.Types.ObjectId, ref: 'auth', default: null },
         name: { type: Schema.Types.String, default: `employee${uuidHelper()}` },
         birthday: { type: Schema.Types.Date },
         email: { type: Schema.Types.String },

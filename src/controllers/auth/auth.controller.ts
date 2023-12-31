@@ -15,24 +15,26 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
         const comparedResult = hashHandler.compare(password, result.password);
         if (!comparedResult) return next(createHttpError(400, 'Password is not correct'));
 
-        const foundEmployee = await EmployeeQuery.findOne({ authId: result._id });
+        const foundEmployee = await EmployeeQuery.findOne({ auth: result._id });
+
+        const accessToken = await jwtHandler.init(
+            {
+                auth_id: result._id,
+                employee_id: foundEmployee?._id,
+                role_id: result.role,
+            },
+            'access',
+        );
         if (!foundEmployee) {
             return next(
                 createHttpSuccess({
                     statusCode: 200,
-                    data: { username, authId: result._id },
+                    data: { username, authId: result._id, accessToken },
                     message: 'You have successfully',
                 }),
             );
         }
 
-        const accessToken = await jwtHandler.init(
-            {
-                auth_id: result._id,
-                employee_id: foundEmployee._id,
-            },
-            'access',
-        );
         return next(
             createHttpSuccess({
                 statusCode: 200,
@@ -41,7 +43,7 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
             }),
         );
     } catch (error) {
-        console.log(error);
+        return next(error);
     }
 };
 
@@ -85,7 +87,7 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
             }),
         );
     } catch (error) {
-        console.log(error);
+        return next(error);
     }
 };
 
@@ -134,7 +136,7 @@ export const resendOtpForConfirmEmail = async (req: Request, res: Response, next
             }),
         );
     } catch (error) {
-        console.log(error);
+        return next(error);
     }
 };
 
@@ -166,7 +168,7 @@ export const resendOtpForConfirmResetPass = async (
             }),
         );
     } catch (error) {
-        console.log(error);
+        return next(error);
     }
 };
 
@@ -210,7 +212,7 @@ export const verifyOtpForResetPass = async (req: Request, res: Response, next: N
             }),
         );
     } catch (error) {
-        console.log(error);
+        return next(error);
     }
 };
 
@@ -230,7 +232,7 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
         await AuthQuery.findOneAndUpdate({ username }, { password: hashPassword });
         next(createHttpSuccess({ statusCode: 200, data: {}, message: 'You have successfully' }));
     } catch (error) {
-        console.log(error);
+        return next(error);
     }
 };
 
@@ -262,6 +264,6 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
             }),
         );
     } catch (error) {
-        console.log(error);
+        return next(error);
     }
 };

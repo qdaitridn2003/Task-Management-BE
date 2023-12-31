@@ -3,7 +3,7 @@ import { AuthSchema } from './auth.schema';
 
 export type EmployeeSchema = {
     _id: Schema.Types.ObjectId;
-    authId: Schema.Types.ObjectId | AuthSchema;
+    auth: Schema.Types.ObjectId | AuthSchema;
     name: string;
     birthday: Date;
     gender: string;
