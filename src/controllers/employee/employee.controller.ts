@@ -19,7 +19,7 @@ export const registerEmployeeProfile = async (req: Request, res: Response, next:
     try {
         const foundEmployee = await EmployeeQuery.findOne({ email: username });
         if (!foundEmployee) {
-            return next(createHttpError(404, 'Employee not found'));
+            return next(createHttpError(404, 'Nhân viên không tồn tại'));
         }
 
         const RegisterEmployee = await EmployeeQuery.findOneAndUpdate(
@@ -38,7 +38,7 @@ export const registerEmployeeProfile = async (req: Request, res: Response, next:
             createHttpSuccess({
                 statusCode: 200,
                 data: { employee: RegisterEmployee },
-                message: 'You have successfully',
+                message: 'Đã thành công',
             }),
         );
     } catch (error) {
@@ -57,13 +57,14 @@ export const updateEmployeeProfile = async (req: Request, res: Response, next: N
 
     try {
         const foundEmployee = await EmployeeQuery.findOne({ _id: employee_id });
-        if (!foundEmployee) return next(createHttpError(404, 'Not found employee'));
+        if (!foundEmployee) return next(createHttpError(404, 'Nhân viên không tồn tại'));
 
         await EmployeeQuery.updateOne(
             { _id: employee_id },
             {
                 email: email,
                 name: fullName,
+                gender,
                 birthday: dateOfBirth,
                 phone: phoneNumber,
                 address,
@@ -92,7 +93,7 @@ export const getEmployeeProfile = async (req: Request, res: Response, next: Next
                 },
             })
             .select({ createdAt: false, updatedAt: false, __v: false });
-        if (!foundEmployee) return next(createHttpError(404, 'Not found employee'));
+        if (!foundEmployee) return next(createHttpError(404, 'Nhân viên không tồn tại'));
 
         return next(
             createHttpSuccess({
@@ -107,14 +108,8 @@ export const getEmployeeProfile = async (req: Request, res: Response, next: Next
 };
 
 export const getEmployeeList = async (req: Request, res: Response, next: NextFunction) => {
-    const { role_id } = res.locals;
     const { search, limit, page } = req.query;
     try {
-        const foundRole = await RoleQuery.findOne({ name: 'Admin' });
-        const foundRoleId = foundRole?._id.toString();
-        if (role_id !== foundRoleId) {
-            return next(createHttpError(401, 'Bạn không phải là admin'));
-        }
         const { amount, offset } = paginationHelper(limit as string, page as string);
         const query = EmployeeQuery.find()
             .populate({
@@ -149,11 +144,10 @@ export const getEmployeeList = async (req: Request, res: Response, next: NextFun
 export const uploadEmployeeAvatar = async (req: Request, res: Response, next: NextFunction) => {
     const avatar = req.file;
     const { employee_id } = res.locals;
-    console.log(avatar);
     try {
         const foundEmployee = await EmployeeQuery.findOne({ _id: employee_id });
         if (!foundEmployee) {
-            return next(createHttpError(404, 'Not found employee'));
+            return next(createHttpError(404, 'Nhân viên không tồn tại'));
         }
         const avatarBuffer = await sharp(avatar?.buffer)
             .resize(480, 480)
@@ -172,20 +166,15 @@ export const uploadEmployeeAvatar = async (req: Request, res: Response, next: Ne
 };
 
 export const editEmployeeRole = async (req: Request, res: Response, next: NextFunction) => {
-    const { role_id } = res.locals;
     const { _id } = req.params;
-
     try {
-        const foundRole = await RoleQuery.findOne({ name: 'Admin' });
-        const foundRoleId = foundRole?._id.toString();
-        if (role_id !== foundRoleId) return next(createHttpError(401, 'Bạn không phải là admin'));
-
         const foundEmployee = await EmployeeQuery.findOne({ _id });
-        if (!foundEmployee) return next(createHttpError(404, 'Không tìm thấy nhân viên'));
+        if (!foundEmployee) return next(createHttpError(404, 'Nhân viên không tồn tại'));
 
-        await AuthQuery.updateOne({ _id: foundEmployee.auth }, { role: foundRole });
+        const foundRole = await RoleQuery.findOne({ name: 'Admin' });
+        await AuthQuery.updateOne({ _id: foundEmployee.auth }, { role: foundRole?._id });
         return next(createHttpSuccess({ statusCode: 200, data: {}, message: 'Đã thành công' }));
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 };

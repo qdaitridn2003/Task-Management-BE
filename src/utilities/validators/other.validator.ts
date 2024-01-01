@@ -11,7 +11,8 @@ export const registerInfoValidator = Zod.object({
     }),
     phoneNumber: Zod.string()
         .max(10, {
-            message: 'Phone number must be have 10 digits or lower Phone number must be have lower 10 digits',
+            message:
+                'Phone number must be have 10 digits or lower Phone number must be have lower 10 digits',
         })
         .regex(new RegExp('^[0-9]*$'), { message: 'Phone number must be a digit' }),
 });
