@@ -519,26 +519,6 @@
                         "type": "string",
                         "example": "123 St Miami",
                         "description": ""
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
-        "/api/employee/upload-avatar-employee": {
-            "post": {
-                "tags": ["Employee"],
-                "description": "",
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-                        "type": "string",
-                        "required": true
                     },
                     {
                         "in": "formData",
@@ -555,6 +535,7 @@
                 }
             }
         },
+
         "/api/employee/edit-employee-role/{:_id}": {
             "put": {
                 "tags": ["Employee"],
