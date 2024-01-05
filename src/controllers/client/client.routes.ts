@@ -9,10 +9,4 @@ ClientRouter.put('/update-info-client/:_id', Authorization, CheckRole, Controlle
 ClientRouter.delete('/delete-client/:_id', Authorization, CheckRole, Controller.deleteClient);
 ClientRouter.get('/get-client-detail/:_id', Authorization, CheckRole, Controller.getClientDetail);
 ClientRouter.get('/get-client-list', Authorization, CheckRole, Controller.getListClient);
-ClientRouter.post(
-    '/upload-avatar-client/:_id',
-    Authorization,
-    CheckRole,
-    ImageHandler.single('avatar'),
-    Controller.uploadAvatarClient,
-);
+ClientRouter.post('/upload-image', ImageHandler.single('avatar'), Controller.uploadImage);

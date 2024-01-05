@@ -10,7 +10,8 @@ import { FirebaseParty } from '../../third-party';
 import { UploadImage } from '../../common';
 
 export const registerEmployeeProfile = async (req: Request, res: Response, next: NextFunction) => {
-    const { username, authId, fullName, dateOfBirth, gender, phoneNumber, address } = req.body;
+    const { username, authId, fullName, dateOfBirth, gender, phoneNumber, address, avatarUrl } =
+        req.body;
     const validator = OtherValidator.registerInfoValidator.safeParse({ gender, phoneNumber });
     if (!validator.success) {
         return next(validator.error);
@@ -32,6 +33,7 @@ export const registerEmployeeProfile = async (req: Request, res: Response, next:
                 gender,
                 address,
                 birthday: dateOfBirth ? new Date(dateOfBirth) : new Date(),
+                avatar: avatarUrl,
             },
         );
         return next(
@@ -47,9 +49,8 @@ export const registerEmployeeProfile = async (req: Request, res: Response, next:
 };
 
 export const updateEmployeeProfile = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, fullName, dateOfBirth, gender, phoneNumber, address } = req.body;
+    const { email, fullName, dateOfBirth, gender, phoneNumber, address, avatarUrl } = req.body;
     const { employee_id } = res.locals;
-    const avatar = req.file;
 
     const validator = OtherValidator.registerInfoValidator.safeParse({ gender, phoneNumber });
     if (!validator.success) {
@@ -59,13 +60,6 @@ export const updateEmployeeProfile = async (req: Request, res: Response, next: N
     try {
         const foundEmployee = await EmployeeQuery.findOne({ _id: employee_id });
         if (!foundEmployee) return next(createHttpError(404, 'Nhân viên không tồn tại'));
-        const avatarBuffer = await sharp(avatar?.buffer)
-            .resize(480, 480)
-            .toBuffer();
-        const avatarUrl = await FirebaseParty.uploadImage(
-            { ...(avatar as Express.Multer.File), buffer: avatarBuffer },
-            UploadImage.avatar,
-        );
 
         await EmployeeQuery.updateOne(
             { _id: employee_id },
@@ -87,29 +81,24 @@ export const updateEmployeeProfile = async (req: Request, res: Response, next: N
     }
 };
 
-// export const uploadEmployeeAvatar = async (req: Request, res: Response, next: NextFunction) => {
-//     const avatar = req.file;
-//     const { employee_id } = res.locals;
-//     try {
-//         const foundEmployee = await EmployeeQuery.findOne({ _id: employee_id });
-//         if (!foundEmployee) {
-//             return next(createHttpError(404, 'Nhân viên không tồn tại'));
-//         }
-//         const avatarBuffer = await sharp(avatar?.buffer)
-//             .resize(480, 480)
-//             .toBuffer();
-//         const avatarUrl = await FirebaseParty.uploadImage(
-//             { ...(avatar as Express.Multer.File), buffer: avatarBuffer },
-//             UploadImage.avatar,
-//         );
-//         await EmployeeQuery.updateOne({ _id: foundEmployee._id }, { avatar: avatarUrl });
-//         return next(
-//             createHttpSuccess({ statusCode: 200, data: { avatarUrl }, message: 'Đã thành công' }),
-//         );
-//     } catch (error) {
-//         next(error);
-//     }
-// };
+export const uploadImage = async (req: Request, res: Response, next: NextFunction) => {
+    const avatar = req.file;
+    try {
+        const avatarBuffer = await sharp(avatar?.buffer)
+            .resize(480, 480)
+            .toBuffer();
+        const avatarUrl = await FirebaseParty.uploadImage(
+            { ...(avatar as Express.Multer.File), buffer: avatarBuffer },
+            UploadImage.avatar,
+        );
+        console.log(avatarUrl);
+        return next(
+            createHttpSuccess({ statusCode: 200, data: { avatarUrl }, message: 'Đã thành công' }),
+        );
+    } catch (error) {
+        return next(error);
+    }
+};
 
 export const getEmployeeProfile = async (req: Request, res: Response, next: NextFunction) => {
     const { employee_id } = res.locals;

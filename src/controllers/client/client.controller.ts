@@ -8,7 +8,8 @@ import { FirebaseParty } from '../../third-party';
 import { UploadImage } from '../../common';
 
 export const createInfoClient = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, fullName, dateOfBirth, gender, phoneNumber, address } = req.body;
+    const { email, fullName, dateOfBirth, gender, phoneNumber, address, avatarUrl } = req.body;
+
     const validator = OtherValidator.registerInfoValidator.safeParse({
         email,
         gender,
@@ -26,6 +27,7 @@ export const createInfoClient = async (req: Request, res: Response, next: NextFu
             birthday: dateOfBirth ? new Date(dateOfBirth) : new Date(),
             gender: gender,
             address,
+            avatar: avatarUrl,
         });
         return next(
             createHttpSuccess({ statusCode: 200, data: createClient, message: 'Đã thành công' }),
@@ -37,7 +39,7 @@ export const createInfoClient = async (req: Request, res: Response, next: NextFu
 
 export const updateInfoClient = async (req: Request, res: Response, next: NextFunction) => {
     const { _id } = req.params;
-    const { email, fullName, dateOfBirth, gender, phoneNumber, address } = req.body;
+    const { email, fullName, dateOfBirth, gender, phoneNumber, address, avatarUrl } = req.body;
     try {
         const foundClient = await ClientQuery.findOne({ _id });
         if (!foundClient) return next(createHttpError(404, 'Không tìm thấy khách hàng'));
@@ -51,9 +53,29 @@ export const updateInfoClient = async (req: Request, res: Response, next: NextFu
                 birthday: dateOfBirth ? new Date(dateOfBirth) : new Date(foundClient.birthday),
                 gender,
                 address,
+                avatar: avatarUrl,
             },
         );
         return next(createHttpSuccess({ statusCode: 200, data: {}, message: 'Đã thành công' }));
+    } catch (error) {
+        return next(error);
+    }
+};
+
+export const uploadImage = async (req: Request, res: Response, next: NextFunction) => {
+    const avatar = req.file;
+    try {
+        const avatarBuffer = await sharp(avatar?.buffer)
+            .resize(480, 480)
+            .toBuffer();
+        const avatarUrl = await FirebaseParty.uploadImage(
+            { ...(avatar as Express.Multer.File), buffer: avatarBuffer },
+            UploadImage.avatar,
+        );
+        console.log(avatarUrl);
+        return next(
+            createHttpSuccess({ statusCode: 200, data: { avatarUrl }, message: 'Đã thành công' }),
+        );
     } catch (error) {
         return next(error);
     }
@@ -124,29 +146,5 @@ export const getListClient = async (req: Request, res: Response, next: NextFunct
         );
     } catch (error) {
         return next(error);
-    }
-};
-
-export const uploadAvatarClient = async (req: Request, res: Response, next: NextFunction) => {
-    const avatar = req.file;
-    const { _id } = req.params;
-    try {
-        const foundClient = await ClientQuery.findOne({ _id });
-        if (!foundClient) {
-            return next(createHttpError(404, 'Khách hàng không tồn tại'));
-        }
-        const avatarBuffer = await sharp(avatar?.buffer)
-            .resize(480, 480)
-            .toBuffer();
-        const avatarUrl = await FirebaseParty.uploadImage(
-            { ...(avatar as Express.Multer.File), buffer: avatarBuffer },
-            UploadImage.avatar,
-        );
-        await ClientQuery.updateOne({ _id: foundClient._id }, { avatar: avatarUrl });
-        return next(
-            createHttpSuccess({ statusCode: 200, data: { avatarUrl }, message: 'Đã thành công' }),
-        );
-    } catch (error) {
-        next(error);
     }
 };
