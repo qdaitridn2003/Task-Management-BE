@@ -81,35 +81,6 @@
                 }
             }
         },
-        "/api/auth/verify-otp": {
-            "post": {
-                "tags": ["Auth"],
-                "description": "",
-                "parameters": [
-                    {
-                        "in": "formData",
-                        "name": "otp",
-                        "type": "string",
-                        "example": "123456",
-                        "description": "",
-                        "required": true
-                    },
-                    {
-                        "in": "formData",
-                        "name": "otpSecret",
-                        "type": "string",
-                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-                        "description": "",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
         "/api/auth/forgot-password": {
             "post": {
                 "tags": ["Auth"],
