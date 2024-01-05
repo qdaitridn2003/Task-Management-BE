@@ -10,10 +10,10 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
     const { username, password } = req.body;
     try {
         const result = await AuthQuery.findOne({ username });
-        if (!result) return next(createHttpError(400, 'Account is not exist'));
+        if (!result) return next(createHttpError(400, 'Tài khoản không tồn tại'));
 
         const comparedResult = hashHandler.compare(password, result.password);
-        if (!comparedResult) return next(createHttpError(400, 'Password is not correct'));
+        if (!comparedResult) return next(createHttpError(400, 'Mật khẩu không đúng'));
 
         const foundEmployee = await EmployeeQuery.findOne({ auth: result._id });
 
@@ -30,7 +30,7 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
                 createHttpSuccess({
                     statusCode: 200,
                     data: { username, authId: result._id, accessToken },
-                    message: 'You have successfully',
+                    message: 'Đã thành công',
                 }),
             );
         }
@@ -39,7 +39,7 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
             createHttpSuccess({
                 statusCode: 200,
                 data: { accessToken },
-                message: 'You have successfully',
+                message: 'Đã thành công',
             }),
         );
     } catch (error) {
@@ -83,7 +83,7 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
             createHttpSuccess({
                 statusCode: 200,
                 data: {},
-                message: 'You have successfully',
+                message: 'Đã thành công',
             }),
         );
     } catch (error) {
@@ -95,7 +95,7 @@ export const sendOtp = async (req: Request, res: Response, next: NextFunction) =
     const { username } = req.body;
     const existingEmailAccount = await AuthQuery.findOne({ username });
     if (existingEmailAccount) {
-        return next(createHttpError(400, 'Account already exists'));
+        return next(createHttpError(400, 'Tài khoản đã được đăng ký'));
     }
 
     try {
@@ -106,7 +106,7 @@ export const sendOtp = async (req: Request, res: Response, next: NextFunction) =
             createHttpSuccess({
                 statusCode: 200,
                 data: { otpSecret },
-                message: 'You have successfully send otp',
+                message: 'Đã thành công',
             }),
         );
     } catch (error) {
@@ -118,7 +118,7 @@ export const resendOtpForConfirmEmail = async (req: Request, res: Response, next
     const { username } = req.body;
     const existingEmailAccount = await AuthQuery.findOne({ username });
     if (existingEmailAccount) {
-        return next(createHttpError(400, 'Account already exists'));
+        return next(createHttpError(400, 'Tài khoản đã được đăng ký'));
     }
 
     try {
@@ -132,7 +132,7 @@ export const resendOtpForConfirmEmail = async (req: Request, res: Response, next
             createHttpSuccess({
                 statusCode: 200,
                 data: { otpSecret },
-                message: 'You have successfully send otp',
+                message: 'Đã thành công',
             }),
         );
     } catch (error) {
@@ -149,7 +149,7 @@ export const resendOtpForConfirmResetPass = async (
 
     const foundAccount = await AuthQuery.findOne({ username });
     if (!foundAccount) {
-        return next(createHttpError(400, 'Account not exist'));
+        return next(createHttpError(400, 'Tài khoản không tồn tại'));
     }
 
     try {
@@ -164,7 +164,7 @@ export const resendOtpForConfirmResetPass = async (
             createHttpSuccess({
                 statusCode: 200,
                 data: { otpSecret },
-                message: 'You have successfully send otp',
+                message: 'Đã thành công',
             }),
         );
     } catch (error) {
@@ -177,7 +177,7 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
 
     const foundAccount = await AuthQuery.findOne({ username });
     if (!foundAccount) {
-        return next(createHttpError(400, 'Account not exist'));
+        return next(createHttpError(400, 'Tài khoản không tồn tại'));
     }
 
     const otpSecret = await OtpHandler.initSecret({
@@ -190,7 +190,7 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
         createHttpSuccess({
             statusCode: 200,
             data: { otpSecret },
-            message: 'You have successfully reset your password',
+            message: 'Đã thành công',
         }),
     );
 };
@@ -208,7 +208,7 @@ export const verifyOtpForResetPass = async (req: Request, res: Response, next: N
             createHttpSuccess({
                 statusCode: 200,
                 data: { username: foundAccount?.username },
-                message: 'You have successfully verify-otp reset password',
+                message: 'Đã thành công',
             }),
         );
     } catch (error) {
