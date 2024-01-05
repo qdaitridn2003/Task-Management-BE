@@ -3,7 +3,12 @@ import { Server } from 'socket.io';
 
 const socketIOGlobal = (socket: Server) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        res.locals.socket = socket;
+        socket.on('connection', (socket) => {
+            res.locals.socket = socket;
+        });
+        socket.on('disconnect', () => {
+            console.log('Socket is disconnected');
+        });
         return next();
     };
 };

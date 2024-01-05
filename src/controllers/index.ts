@@ -3,6 +3,8 @@ import { AuthRouter } from './auth';
 import { EmployeeRouter } from './employee';
 import { ClientRouter } from './client';
 import { TagRouter } from './tag';
+import { EventRouter } from './event';
+import { TaskRouter } from './task';
 
 const ApiController = Router();
 
@@ -10,5 +12,7 @@ ApiController.use('/auth', AuthRouter);
 ApiController.use('/employee', EmployeeRouter);
 ApiController.use('/client', ClientRouter);
 ApiController.use('/tag', TagRouter);
+ApiController.use('/event', EventRouter);
+ApiController.use('/task', TaskRouter);
 
 export default ApiController;

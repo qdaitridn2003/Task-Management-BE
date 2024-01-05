@@ -59,7 +59,6 @@
                 }
             }
         },
-
         "/api/auth/send-otp/confirm-email": {
             "post": {
                 "tags": ["Auth"],
@@ -962,6 +961,566 @@
                         "type": "string",
                         "example": "a",
                         "description": "Using to search for client's full name or email "
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/task/create-task": {
+            "post": {
+                "tags": ["Task"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "name",
+                        "type": "string",
+                        "example": "example",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "tagId",
+                        "type": "string",
+                        "example": "1",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "leaderId",
+                        "type": "string",
+                        "example": "1",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "employeeIds",
+                        "type": "string",
+                        "example": "[\"1\",\"2\"]",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "dateTime",
+                        "type": "string",
+                        "example": "2023-12-30T03:12:27.740+00:00",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "dateReminder",
+                        "type": "string",
+                        "example": "2023-12-30T03:12:27.740+00:00",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "description",
+                        "type": "string",
+                        "example": "example",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "status",
+                        "type": "string",
+                        "example": "example",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "images",
+                        "type": "string",
+                        "example": "[\"http://url-image.com\"]",
+                        "description": ""
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/task/update-task": {
+            "put": {
+                "tags": ["Task"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "_id",
+                        "type": "string",
+                        "example": "1",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "name",
+                        "type": "string",
+                        "example": "example",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "tagId",
+                        "type": "string",
+                        "example": "1",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "leaderId",
+                        "type": "string",
+                        "example": "1",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "employeeIds",
+                        "type": "string",
+                        "example": "[\"1\",\"2\"]",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "dateTime",
+                        "type": "string",
+                        "example": "2023-12-30T03:12:27.740+00:00",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "dateReminder",
+                        "type": "string",
+                        "example": "2023-12-30T03:12:27.740+00:00",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "description",
+                        "type": "string",
+                        "example": "example",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "status",
+                        "type": "string",
+                        "example": "example",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "images",
+                        "type": "string",
+                        "example": "[\"http://url-image.com\"]",
+                        "description": ""
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/task/delete-task": {
+            "delete": {
+                "tags": ["Task"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "_id",
+                        "type": "string",
+                        "example": "1",
+                        "description": "",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/task/get-detail-task": {
+            "get": {
+                "tags": ["Task"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "_id",
+                        "type": "string",
+                        "example": "1",
+                        "description": "",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/task/get-list-task": {
+            "get": {
+                "tags": ["Task"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "type": "string",
+                        "example": "10",
+                        "description": ""
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "type": "string",
+                        "example": "1",
+                        "description": ""
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "type": "string",
+                        "example": "a",
+                        "description": ""
+                    },
+                    {
+                        "in": "query",
+                        "name": "location",
+                        "type": "string",
+                        "example": "example",
+                        "description": ""
+                    },
+                    {
+                        "in": "query",
+                        "name": "status",
+                        "type": "string",
+                        "example": "upcoming",
+                        "description": ""
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/event/create-event": {
+            "post": {
+                "tags": ["Event"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "name",
+                        "type": "string",
+                        "example": "example",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "clientId",
+                        "type": "string",
+                        "example": "1",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "taskIds",
+                        "type": "string",
+                        "example": "[\"1\",\"2\"]",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "startDateTime",
+                        "type": "string",
+                        "example": "2023-12-30T03:12:27.740+00:00",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "endDateTime",
+                        "type": "string",
+                        "example": "2023-12-30T03:12:27.740+00:00",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "description",
+                        "type": "string",
+                        "example": "example",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "status",
+                        "type": "string",
+                        "example": "example",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "images",
+                        "type": "string",
+                        "example": "[\"http://url-image.com\"]",
+                        "description": ""
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/event/update-event": {
+            "put": {
+                "tags": ["Event"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "_id",
+                        "type": "1",
+                        "example": "example",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "name",
+                        "type": "string",
+                        "example": "example",
+                        "description": "",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "clientId",
+                        "type": "string",
+                        "example": "1",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "taskIds",
+                        "type": "string",
+                        "example": "[\"1\",\"2\"]",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "startDateTime",
+                        "type": "string",
+                        "example": "2023-12-30T03:12:27.740+00:00",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "endDateTime",
+                        "type": "string",
+                        "example": "2023-12-30T03:12:27.740+00:00",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "description",
+                        "type": "string",
+                        "example": "example",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "status",
+                        "type": "string",
+                        "example": "example",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "images",
+                        "type": "string",
+                        "example": "[\"http://url-image.com\"]",
+                        "description": ""
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/event/delete-event": {
+            "delete": {
+                "tags": ["Event"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "_id",
+                        "type": "1",
+                        "example": "example",
+                        "description": "",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/event/get-detail-event": {
+            "get": {
+                "tags": ["Event"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "_id",
+                        "type": "1",
+                        "example": "example",
+                        "description": "",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/event/get-list-event": {
+            "get": {
+                "tags": ["Event"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "type": "string",
+                        "example": "10",
+                        "description": ""
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "type": "string",
+                        "example": "1",
+                        "description": ""
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "type": "string",
+                        "example": "a",
+                        "description": ""
+                    },
+                    {
+                        "in": "query",
+                        "name": "location",
+                        "type": "string",
+                        "example": "example",
+                        "description": ""
+                    },
+                    {
+                        "in": "query",
+                        "name": "status",
+                        "type": "string",
+                        "example": "upcoming",
+                        "description": ""
                     }
                 ],
                 "responses": {

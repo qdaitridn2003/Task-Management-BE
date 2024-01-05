@@ -11,5 +11,6 @@ export type EventSchema = {
     startDateTime: Date;
     endDateTime: Date;
     location: string;
+    status: string;
     images: string[];
 };

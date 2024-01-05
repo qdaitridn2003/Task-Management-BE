@@ -11,6 +11,7 @@ const eventSchema = new Schema<EventSchema>(
         startDateTime: { type: Schema.Types.Date },
         endDateTime: { type: Schema.Types.Date },
         location: { type: Schema.Types.String },
+        status: { type: Schema.Types.String },
         images: [{ type: Schema.Types.String, default: null }],
     },
     { timestamps: true },
