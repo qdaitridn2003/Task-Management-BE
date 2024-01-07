@@ -167,11 +167,14 @@ export const getEmployeeList = async (req: Request, res: Response, next: NextFun
 
 export const editEmployeeRole = async (req: Request, res: Response, next: NextFunction) => {
     const { _id } = req.params;
+    const { roleId } = req.body;
     try {
         const foundEmployee = await EmployeeQuery.findOne({ _id });
         if (!foundEmployee) return next(createHttpError(404, 'Nhân viên không tồn tại'));
 
-        const foundRole = await RoleQuery.findOne({ name: 'Admin' });
+        const foundRole = await RoleQuery.findOne({ _id: roleId });
+        if (!foundRole) return next(createHttpError(404, 'Chức vụ không tồn tại'));
+
         await AuthQuery.updateOne({ _id: foundEmployee.auth }, { role: foundRole?._id });
         return next(createHttpSuccess({ statusCode: 200, data: {}, message: 'Đã thành công' }));
     } catch (error) {
