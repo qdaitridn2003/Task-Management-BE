@@ -1020,6 +1020,13 @@
                     },
                     {
                         "in": "formData",
+                        "name": "eventId",
+                        "type": "string",
+                        "example": "1",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
                         "name": "dateTime",
                         "type": "string",
                         "example": "2023-12-30T03:12:27.740+00:00",
@@ -1293,13 +1300,6 @@
                     },
                     {
                         "in": "formData",
-                        "name": "taskIds",
-                        "type": "string",
-                        "example": "[\"1\",\"2\"]",
-                        "description": ""
-                    },
-                    {
-                        "in": "formData",
                         "name": "startDateTime",
                         "type": "string",
                         "example": "2023-12-30T03:12:27.740+00:00",
@@ -1310,6 +1310,13 @@
                         "name": "endDateTime",
                         "type": "string",
                         "example": "2023-12-30T03:12:27.740+00:00",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "location",
+                        "type": "string",
+                        "example": "example",
                         "description": ""
                     },
                     {
@@ -1328,7 +1335,7 @@
                     },
                     {
                         "in": "formData",
-                        "name": "images",
+                        "name": "imageUrls",
                         "type": "string",
                         "example": "[\"http://url-image.com\"]",
                         "description": ""
@@ -1378,9 +1385,9 @@
                     },
                     {
                         "in": "formData",
-                        "name": "taskIds",
+                        "name": "location",
                         "type": "string",
-                        "example": "[\"1\",\"2\"]",
+                        "example": "example",
                         "description": ""
                     },
                     {
@@ -1413,7 +1420,7 @@
                     },
                     {
                         "in": "formData",
-                        "name": "images",
+                        "name": "imageUrls",
                         "type": "string",
                         "example": "[\"http://url-image.com\"]",
                         "description": ""
@@ -1426,6 +1433,26 @@
                 }
             }
         },
+        "/api/event/upload-images-event": {
+            "post": {
+                "tags": ["Event"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "images",
+                        "in": "formData",
+                        "type": "",
+                        "example": ""
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+
         "/api/event/delete-event": {
             "delete": {
                 "tags": ["Event"],

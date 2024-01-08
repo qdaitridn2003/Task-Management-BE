@@ -7,6 +7,7 @@ const taskSchema = new Schema<TaskSchema>(
         tag: { type: Schema.Types.ObjectId, ref: 'tag', default: null },
         leader: { type: Schema.Types.ObjectId, ref: 'employee', default: null },
         employees: [{ type: Schema.Types.ObjectId, ref: 'employee', default: null }],
+        event: { type: Schema.Types.ObjectId, ref: 'event', default: null },
         name: { type: Schema.Types.String },
         dateTime: { type: Schema.Types.Date },
         dateReminder: { type: Schema.Types.Date },

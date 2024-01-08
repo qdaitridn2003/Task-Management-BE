@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-
 import { TaskQuery } from '../../models';
 import { createHttpSuccess, paginationHelper, searchHelper } from '../../utilities';
 import createHttpError from 'http-errors';
@@ -15,6 +14,7 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
         description,
         status,
         images,
+        eventId,
     } = req.body;
 
     if (!name) {
@@ -26,6 +26,7 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
             tag: tagId,
             leader: leaderId,
             employees: employeeIds,
+            event: eventId,
             name: name,
             dateTime,
             dateReminder,
@@ -104,7 +105,8 @@ export const getDetailTask = async (req: Request, res: Response, next: NextFunct
                 __v: false,
                 auth: false,
             })
-            .populate('employees', { createdAt: false, updatedAt: false, __v: false, auth: false });
+            .populate('employees', { createdAt: false, updatedAt: false, __v: false, auth: false })
+            .populate('event', { createdAt: false, updatedAt: false, __v: false });
         if (!foundTask) {
             return next(createHttpError(404, 'Công việc không tồn tại'));
         }

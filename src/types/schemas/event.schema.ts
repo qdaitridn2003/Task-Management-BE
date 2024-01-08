@@ -5,7 +5,6 @@ import { TaskSchema } from './task.schema';
 export type EventSchema = {
     _id: Schema.Types.ObjectId;
     client: Schema.Types.ObjectId | ClientSchema;
-    tasks: Schema.Types.ObjectId[] | TaskSchema[];
     name: string;
     description: string;
     startDateTime: Date;

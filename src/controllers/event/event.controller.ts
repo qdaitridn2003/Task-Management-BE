@@ -4,19 +4,13 @@ import { Socket } from 'socket.io';
 import { ClientQuery, EventQuery } from '../../models';
 import { createHttpSuccess, paginationHelper, searchHelper } from '../../utilities';
 import createHttpError from 'http-errors';
+import sharp from 'sharp';
+import { FirebaseParty } from '../../third-party';
+import { UploadImage } from '../../common';
 
 export const createEvent = async (req: Request, res: Response, next: NextFunction) => {
-    const {
-        clientId,
-        taskIds,
-        name,
-        description,
-        startDateTime,
-        endDateTime,
-        location,
-        status,
-        images,
-    } = req.body;
+    const { clientId, name, description, startDateTime, endDateTime, location, status, imageUrls } =
+        req.body;
     // const socket = res.locals.socket as Socket;
 
     if (!name) {
@@ -27,13 +21,12 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
         const result = await EventQuery.create({
             client: clientId,
             name: name,
-            tasks: taskIds,
             description: description,
             startDateTime: startDateTime,
             endDateTime: endDateTime,
             status,
             location: location,
-            images: images,
+            images: imageUrls,
         });
         await ClientQuery.updateOne({ _id: clientId }, { $push: { events: result._id } });
         return next(createHttpSuccess({ data: { event: result } }));
@@ -42,19 +35,29 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
     }
 };
 
+export const uploadImagesEvent = async (req: Request, res: Response, next: NextFunction) => {
+    const images = req.files;
+    try {
+        const imagesUrls = await Promise.all(
+            (images as Express.Multer.File[]).map(async (image: Express.Multer.File) => {
+                const imageBuffer = await sharp(image.buffer).resize(720, 480).toBuffer();
+                return await FirebaseParty.uploadImage(
+                    { ...image, buffer: imageBuffer },
+                    UploadImage.image,
+                );
+            }),
+        );
+        console.log(imagesUrls);
+        return next(createHttpSuccess({ data: imagesUrls }));
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
     const { _id } = req.params;
-    const {
-        clientId,
-        taskIds,
-        name,
-        description,
-        startDateTime,
-        endDateTime,
-        location,
-        images,
-        status,
-    } = req.body;
+    const { clientId, name, description, startDateTime, endDateTime, location, imageUrls, status } =
+        req.body;
     // const socket = res.locals.socket as Socket;
     try {
         const foundEvent = await EventQuery.findOne({ _id });
@@ -66,13 +69,12 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
             {
                 client: clientId,
                 name: name,
-                tasks: taskIds,
                 description: description,
                 status,
                 startDateTime: startDateTime,
                 endDateTime: endDateTime,
                 location: location,
-                images: images,
+                images: imageUrls,
             },
         );
         return next(createHttpSuccess({}));
