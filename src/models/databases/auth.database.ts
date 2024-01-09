@@ -7,7 +7,7 @@ const authSchema = new Schema<AuthSchema>(
         role: { type: Schema.Types.ObjectId, ref: 'role', default: null },
         username: { type: Schema.Types.String },
         password: { type: Schema.Types.String },
-        expoToken: [{ type: Schema.Types.String, default: null }],
+        expoToken: { type: Schema.Types.String, default: null },
     },
     { timestamps: true },
 );

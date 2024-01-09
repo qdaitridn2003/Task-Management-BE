@@ -14,3 +14,4 @@ AuthRouter.post('/verify-otp/reset-password', Controller.verifyOtpForResetPass);
 AuthRouter.put('/reset-password', Controller.resetPassword);
 AuthRouter.put('/sign-in', Controller.signIn);
 AuthRouter.put('/change-password', Authorization, Controller.changePassword);
+AuthRouter.post('/register-expo-token', Authorization, Controller.registerExpoToken);

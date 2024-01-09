@@ -6,5 +6,5 @@ export type AuthSchema = {
     username: string;
     password: string;
     role: Schema.Types.ObjectId | RoleSchema;
-    expoToken: string[];
+    expoToken: string;
 };
