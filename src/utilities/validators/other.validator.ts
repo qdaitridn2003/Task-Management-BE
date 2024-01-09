@@ -1,18 +1,18 @@
 import { z as Zod } from 'zod';
 
 export const registerInfoValidator = Zod.object({
-    email: Zod.string().email({ message: 'Email must an email address' }).optional(),
-    gender: Zod.enum(['male', 'female'], {
+    email: Zod.string().email({ message: 'Email không hợp lệ' }).optional(),
+    gender: Zod.enum(['nam', 'nữ'], {
         errorMap: (issue, context) => {
             return {
-                message: 'Gender must be male or female',
+                message: 'Giới tính phải là nam hoặc nữ',
             };
         },
     }),
     phoneNumber: Zod.string()
         .max(10, {
             message:
-                'Phone number must be have 10 digits or lower Phone number must be have lower 10 digits',
+                'Số điện thoại phải có 10 chữ số trở xuống Số điện thoại phải có ít hơn 10 chữ số',
         })
-        .regex(new RegExp('^[0-9]*$'), { message: 'Phone number must be a digit' }),
+        .regex(new RegExp('^[0-9]*$'), { message: 'Số điện thoại phải là số' }),
 });
