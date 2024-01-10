@@ -6,6 +6,7 @@ import { TagRouter } from './tag';
 import { EventRouter } from './event';
 import { TaskRouter } from './task';
 import { RoleRouter } from './role';
+import { NotificationRouter } from './notification';
 
 const ApiController = Router();
 
@@ -16,5 +17,6 @@ ApiController.use('/tag', TagRouter);
 ApiController.use('/event', EventRouter);
 ApiController.use('/task', TaskRouter);
 ApiController.use('/role', RoleRouter);
+ApiController.use('/notification', NotificationRouter);
 
 export default ApiController;

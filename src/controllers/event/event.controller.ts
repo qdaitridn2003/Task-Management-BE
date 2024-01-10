@@ -1,16 +1,22 @@
 import { Request, Response, NextFunction } from 'express';
 import { Socket } from 'socket.io';
 
-import { ClientQuery, EventQuery } from '../../models';
-import { createHttpSuccess, paginationHelper, searchHelper } from '../../utilities';
+import { ClientQuery, EventQuery, NotificationQuery } from '../../models';
+import {
+    createHttpSuccess,
+    createNotification,
+    paginationHelper,
+    searchHelper,
+} from '../../utilities';
 import createHttpError from 'http-errors';
 import sharp from 'sharp';
 import { FirebaseParty } from '../../third-party';
-import { UploadImage } from '../../common';
+import { ActionType, UploadImage } from '../../common';
 
 export const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     const { clientId, name, description, startDateTime, endDateTime, location, status, imageUrls } =
         req.body;
+    const { employee_id } = res.locals;
     // const socket = res.locals.socket as Socket;
 
     if (!name) {
@@ -29,6 +35,13 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
             images: imageUrls,
         });
         await ClientQuery.updateOne({ _id: clientId }, { $push: { events: result._id } });
+        await createNotification(
+            employee_id,
+            `[Event #${result._id}] Bạn đang có sự kiện mới tên ${name.toUpperCase()}`,
+            ActionType.Create,
+            'event',
+            result._id,
+        );
         return next(createHttpSuccess({ data: { event: result } }));
     } catch (error) {
         return next(error);
@@ -59,6 +72,7 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
     const { clientId, name, description, startDateTime, endDateTime, location, imageUrls, status } =
         req.body;
     // const socket = res.locals.socket as Socket;
+    const { employee_id } = res.locals;
     try {
         const foundEvent = await EventQuery.findOne({ _id });
         if (!foundEvent) {
@@ -77,6 +91,13 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
                 images: imageUrls,
             },
         );
+        await createNotification(
+            employee_id,
+            `[Event #${_id}] Sự kiện ${foundEvent.name.toUpperCase()} đã được chỉnh sửa, vui lòng kiểm tra`,
+            ActionType.Update,
+            'event',
+            _id,
+        );
         return next(createHttpSuccess({}));
     } catch (error) {
         return next(error);
@@ -85,6 +106,7 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
 
 export const deleteEvent = async (req: Request, res: Response, next: NextFunction) => {
     const { _id } = req.params;
+    const { employee_id } = res.locals;
     try {
         const foundEvent = await EventQuery.findOne({ _id });
         if (!foundEvent) {
@@ -92,6 +114,17 @@ export const deleteEvent = async (req: Request, res: Response, next: NextFunctio
         }
         await EventQuery.deleteOne({ _id: foundEvent._id });
         await ClientQuery.updateOne({ events: foundEvent }, { $pull: { events: foundEvent._id } });
+        await createNotification(
+            employee_id,
+            `[Event #${_id}] Sự kiện ${foundEvent.name.toUpperCase()} đã được xóa`,
+            ActionType.Delete,
+            'event',
+            _id,
+        );
+        await NotificationQuery.deleteMany({
+            event: foundEvent._id,
+            type: { $ne: ActionType.Delete },
+        });
         return next(createHttpSuccess({}));
     } catch (error) {
         return next(error);

@@ -5,3 +5,4 @@ export { default as EventQuery } from './event.database';
 export { default as RoleQuery } from './role.database';
 export { default as TagQuery } from './tag.database';
 export { default as TaskQuery } from './task.database';
+export { default as NotificationQuery } from './notification.database';

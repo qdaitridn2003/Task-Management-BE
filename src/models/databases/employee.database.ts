@@ -1,13 +1,13 @@
 import mongoose, { Schema } from 'mongoose';
+import { v4 as uuidV4 } from 'uuid';
 
 import { EmployeeSchema } from '../../types';
-import { uuidHelper } from '../../utilities';
 
 const employeeSchema = new Schema<EmployeeSchema>(
     {
         _id: { type: Schema.Types.ObjectId, auto: true },
         auth: { type: Schema.Types.ObjectId, ref: 'auth', default: null },
-        name: { type: Schema.Types.String, default: `employee${uuidHelper()}` },
+        name: { type: Schema.Types.String, default: `employee${uuidV4().substring(0, 8)}` },
         birthday: { type: Schema.Types.Date },
         email: { type: Schema.Types.String },
         phone: { type: Schema.Types.String },
