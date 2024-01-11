@@ -1,7 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
-import { TaskQuery } from '../../models';
-import { createHttpSuccess, paginationHelper, searchHelper } from '../../utilities';
+import { NotificationQuery, TaskQuery } from '../../models';
+import {
+    createHttpSuccess,
+    paginationHelper,
+    searchHelper,
+    createNotification,
+} from '../../utilities';
 import createHttpError from 'http-errors';
+import { ActionType } from '../../common';
 
 export const createTask = async (req: Request, res: Response, next: NextFunction) => {
     const {
@@ -34,6 +40,13 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
             status,
             images,
         });
+        await createNotification(
+            [...employeeIds, leaderId],
+            `[Task #${result._id}] Bạn đang có công việc mới tên ${name.toUpperCase()}`,
+            ActionType.Create,
+            'task',
+            result._id,
+        );
         return next(createHttpSuccess({ data: { task: result } }));
     } catch (error) {
         return next(error);
@@ -52,6 +65,7 @@ export const updateTask = async (req: Request, res: Response, next: NextFunction
         status,
         images,
     } = req.body;
+    const { employee_id } = res.locals;
     try {
         const foundTask = await TaskQuery.findOne({ _id });
         if (!foundTask) {
@@ -71,6 +85,13 @@ export const updateTask = async (req: Request, res: Response, next: NextFunction
                 images,
             },
         );
+        await createNotification(
+            [...foundTask.employees, foundTask.leader],
+            `[Task #${_id}] Công việc ${foundTask.name.toUpperCase()} đã được chỉnh sửa, vui lòng kiểm tra`,
+            ActionType.Update,
+            'task',
+            _id,
+        );
         return next(createHttpSuccess({}));
     } catch (error) {
         return next(error);
@@ -78,12 +99,24 @@ export const updateTask = async (req: Request, res: Response, next: NextFunction
 };
 export const deleteTask = async (req: Request, res: Response, next: NextFunction) => {
     const { _id } = req.params;
+    const { employee_id } = res.locals;
     try {
         const foundTask = await TaskQuery.findOne({ _id });
         if (!foundTask) {
             return next(createHttpError(404, 'Công việc không tồn tại'));
         }
         await TaskQuery.deleteOne({ _id: foundTask._id });
+        await createNotification(
+            [...foundTask.employees, foundTask.leader],
+            `[Task #${_id}] Công việc ${foundTask.name.toUpperCase()} đã được xóa`,
+            ActionType.Delete,
+            'task',
+            _id,
+        );
+        await NotificationQuery.deleteMany({
+            task: foundTask._id,
+            type: { $ne: ActionType.Delete },
+        });
         return next(createHttpSuccess({}));
     } catch (error) {
         return next(error);

@@ -98,3 +98,9 @@ export const UploadImage = {
     image: 1,
     avatar: 2,
 };
+
+export const ActionType = {
+    Create: 'Create',
+    Update: 'Update',
+    Delete: 'Delete',
+};

@@ -15,5 +15,5 @@ export type TaskSchema = {
     location: string;
     status: string;
     images: string[];
-    employees: Schema.Types.ObjectId | EmployeeSchema;
+    employees: Schema.Types.ObjectId[] | EmployeeSchema[];
 };

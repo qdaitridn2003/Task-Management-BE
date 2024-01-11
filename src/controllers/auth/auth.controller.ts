@@ -267,3 +267,19 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
         return next(error);
     }
 };
+
+export const registerExpoToken = async (req: Request, res: Response, next: NextFunction) => {
+    const { expoToken } = req.body;
+    const { auth_id } = res.locals;
+
+    if (!expoToken) {
+        return next(createHttpError(404, 'Không tìm thấy mã expo'));
+    }
+
+    try {
+        await AuthQuery.updateOne({ _id: auth_id }, { expoToken: expoToken });
+        return next(createHttpSuccess({}));
+    } catch (error) {
+        return next(error);
+    }
+};
