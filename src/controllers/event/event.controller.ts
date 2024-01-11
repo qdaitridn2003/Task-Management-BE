@@ -107,8 +107,8 @@ export const getDetailEvent = async (req: Request, res: Response, next: NextFunc
                 updatedAt: false,
                 __v: false,
             })
-            .populate('client', { createdAt: false, updatedAt: false, __v: false })
-            .populate('tasks', { createdAt: false, updatedAt: false, __v: false });
+            .populate('client', { createdAt: false, updatedAt: false, __v: false });
+
         if (!foundEvent) {
             return next(createHttpError(404, 'Sự kiện không tồn tại'));
         }
