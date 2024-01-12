@@ -101,7 +101,6 @@ export const uploadImage = async (req: Request, res: Response, next: NextFunctio
             { ...(avatar as Express.Multer.File), buffer: avatarBuffer },
             UploadImage.avatar,
         );
-        console.log(avatarUrl);
         return next(
             createHttpSuccess({ statusCode: 200, data: { avatarUrl }, message: 'Đã thành công' }),
         );

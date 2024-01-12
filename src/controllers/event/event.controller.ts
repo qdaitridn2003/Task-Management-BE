@@ -60,7 +60,6 @@ export const uploadImagesEvent = async (req: Request, res: Response, next: NextF
                 );
             }),
         );
-        console.log(imagesUrls);
         return next(createHttpSuccess({ data: imagesUrls }));
     } catch (error) {
         next(error);
