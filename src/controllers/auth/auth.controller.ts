@@ -110,7 +110,7 @@ export const sendOtp = async (req: Request, res: Response, next: NextFunction) =
             }),
         );
     } catch (error) {
-        console.log(error);
+        return next(error);
     }
 };
 
@@ -223,7 +223,6 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
             password,
             confirmPassword,
         });
-        console.log(validate);
         if (!validate.success) {
             return next(validate.error);
         }

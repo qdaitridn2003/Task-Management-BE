@@ -102,7 +102,6 @@ export const uploadImage = async (req: Request, res: Response, next: NextFunctio
 export const getEmployeeProfile = async (req: Request, res: Response, next: NextFunction) => {
     const { employee_id } = res.locals;
     const { _id } = req.params;
-    console.log(employee_id);
     try {
         const foundEmployee = await EmployeeQuery.findOne({
             _id: _id ? _id : employee_id,
