@@ -14,6 +14,7 @@ const employeeSchema = new Schema<EmployeeSchema>(
         address: { type: Schema.Types.String },
         gender: { type: Schema.Types.String },
         avatar: { type: Schema.Types.String, default: null },
+        status: { type: Schema.Types.String, default: 'active' },
     },
     { timestamps: true },
 );

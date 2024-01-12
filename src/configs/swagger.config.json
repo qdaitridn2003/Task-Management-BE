@@ -539,6 +539,34 @@
                 }
             }
         },
+        "/api/employee/update-client-status/{:_id}": {
+            "put": {
+                "tags": ["Employee"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "status",
+
+                        "type": "string",
+                        "example": "active",
+                        "description": ""
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/api/employee/upload-image": {
             "post": {
                 "tags": ["Employee"],
@@ -629,6 +657,14 @@
                         "required": true,
                         "type": "string",
                         "example": "male",
+                        "description": ""
+                    },
+                    {
+                        "in": "formData",
+                        "name": "status",
+
+                        "type": "string",
+                        "example": "active",
                         "description": ""
                     },
                     {
@@ -735,6 +771,34 @@
                         "name": "avatarUrl",
                         "type": "string",
                         "example": "https://firebasestorage.googleapis.com/v0/b/event-management-api-233ec",
+                        "description": ""
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/client/update-client-status/{:_id}": {
+            "put": {
+                "tags": ["Client"],
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Must be access token admin",
+                        "in": "header",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "status",
+                        "type": "string",
+                        "example": "active",
                         "description": ""
                     }
                 ],

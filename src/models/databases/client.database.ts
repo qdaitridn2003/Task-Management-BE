@@ -12,6 +12,7 @@ const clientSchema = new Schema<ClientSchema>(
         address: { type: Schema.Types.String },
         avatar: { type: Schema.Types.String, default: null },
         events: [{ type: Schema.Types.ObjectId, ref: 'event', default: null }],
+        status: { type: Schema.Types.String, default: 'active' },
     },
     { timestamps: true },
 );

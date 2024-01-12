@@ -11,4 +11,5 @@ export type EmployeeSchema = {
     email: string;
     address: string;
     avatar: string;
+    status: String;
 };

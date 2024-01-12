@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { OtherValidator, createHttpSuccess, paginationHelper } from '../../utilities';
-import { AuthQuery, EmployeeQuery, RoleQuery } from '../../models';
+import { AuthQuery, EmployeeQuery, RoleQuery, TaskQuery } from '../../models';
 import createHttpError from 'http-errors';
 import jwtHandler from '../../utilities/handlers/jwt.handler';
 import path from 'path';
@@ -78,6 +78,24 @@ export const updateEmployeeProfile = async (req: Request, res: Response, next: N
         );
     } catch (error) {
         return next(error);
+    }
+};
+
+export const updateEmployeeStatus = async (req: Request, res: Response, next: NextFunction) => {
+    const { _id } = req.params;
+    const { status } = req.body;
+    try {
+        const foundEmployee = await EmployeeQuery.findOne({ _id });
+        if (!foundEmployee) return next(createHttpError(404, 'Nhân viên không tồn tại'));
+
+        const foundEmployeeAtTask = await TaskQuery.findOne({ employees: _id });
+        if (foundEmployeeAtTask && status === 'disabled')
+            return next(createHttpError(400, 'Không thể vô hiệu hoá nhân viên này'));
+
+        await EmployeeQuery.updateOne({ _id: foundEmployee }, { status });
+        return next(createHttpSuccess({ data: {} }));
+    } catch (error) {
+        next(error);
     }
 };
 

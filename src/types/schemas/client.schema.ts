@@ -10,5 +10,6 @@ export type ClientSchema = {
     email: string;
     address: string;
     avatar: string;
+    status: string;
     events: Schema.Types.ObjectId[] | EventSchema[];
 };

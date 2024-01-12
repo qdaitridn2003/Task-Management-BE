@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { ClientQuery, EmployeeQuery, RoleQuery } from '../../models';
+import { ClientQuery, EmployeeQuery, EventQuery, RoleQuery } from '../../models';
 import createHttpError from 'http-errors';
 import { OtherValidator, createHttpSuccess, paginationHelper } from '../../utilities';
 import { searchHelper } from '../../utilities/helpers/search.helper';
@@ -39,11 +39,16 @@ export const createInfoClient = async (req: Request, res: Response, next: NextFu
 
 export const updateInfoClient = async (req: Request, res: Response, next: NextFunction) => {
     const { _id } = req.params;
-    const { email, fullName, dateOfBirth, gender, phoneNumber, address, avatarUrl } = req.body;
+    const { email, fullName, dateOfBirth, gender, phoneNumber, address, avatarUrl, status } =
+        req.body;
     try {
         const foundClient = await ClientQuery.findOne({ _id });
         if (!foundClient) return next(createHttpError(404, 'Không tìm thấy khách hàng'));
 
+        const foundClientAtEvent = await EventQuery.findOne({ client: _id });
+        if (status === 'disabled' && foundClientAtEvent) {
+            return next(createHttpSuccess({ data: {}, message: 'Không thể xoá khách hàng này' }));
+        }
         await ClientQuery.updateOne(
             { _id: foundClient._id },
             {
@@ -54,11 +59,35 @@ export const updateInfoClient = async (req: Request, res: Response, next: NextFu
                 gender,
                 address,
                 avatar: avatarUrl,
+                status,
             },
         );
         return next(createHttpSuccess({ statusCode: 200, data: {}, message: 'Đã thành công' }));
     } catch (error) {
         return next(error);
+    }
+};
+
+export const updateClientStatus = async (req: Request, res: Response, next: NextFunction) => {
+    const { _id } = req.params;
+    const { status } = req.body;
+    try {
+        const foundClient = await ClientQuery.findOne({ _id });
+        if (!foundClient) return next(createHttpError(404, 'Không tìm thấy khách hàng'));
+
+        const foundClientAtEvent = await EventQuery.findOne({ client: _id });
+        if (status === 'disabled' && foundClientAtEvent) {
+            return next(createHttpError(400, 'Không thể thay đổi trạng thái khách hàng này'));
+        }
+        await ClientQuery.updateOne(
+            { _id: foundClient._id },
+            {
+                status,
+            },
+        );
+        return next(createHttpSuccess({ data: {} }));
+    } catch (error) {
+        next(error);
     }
 };
 
