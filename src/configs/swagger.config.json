@@ -461,6 +461,13 @@
                         "type": "string",
                         "example": "1",
                         "description": ""
+                    },
+                    {
+                        "in": "query",
+                        "name": "status",
+                        "type": "string",
+                        "example": "active",
+                        "description": ""
                     }
                 ],
                 "responses": {
@@ -918,6 +925,13 @@
                         "type": "string",
                         "example": "a",
                         "description": "Using to search for client's full name or email "
+                    },
+                    {
+                        "in": "query",
+                        "name": "status",
+                        "type": "string",
+                        "example": "active",
+                        "description": ""
                     }
                 ],
                 "responses": {

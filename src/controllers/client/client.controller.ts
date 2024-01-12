@@ -141,10 +141,10 @@ export const getClientDetail = async (req: Request, res: Response, next: NextFun
 };
 
 export const getListClient = async (req: Request, res: Response, next: NextFunction) => {
-    const { limit, page, search } = req.query;
+    const { limit, page, search, status } = req.query;
     try {
         const { amount, offset } = paginationHelper(limit as string, page as string);
-        const query = ClientQuery.find()
+        const query = ClientQuery.find({ status })
             .populate({
                 path: 'events',
                 select: { createdAt: false, updatedAt: false, __v: false },

@@ -148,10 +148,10 @@ export const getEmployeeProfile = async (req: Request, res: Response, next: Next
 };
 
 export const getEmployeeList = async (req: Request, res: Response, next: NextFunction) => {
-    const { search, limit, page } = req.query;
+    const { search, limit, page, status } = req.query;
     try {
         const { amount, offset } = paginationHelper(limit as string, page as string);
-        const query = EmployeeQuery.find()
+        const query = EmployeeQuery.find({ status })
             .populate({
                 path: 'auth',
                 select: { _id: true, username: true, role: true },
