@@ -163,8 +163,7 @@ export const getListEvent = async (req: Request, res: Response, next: NextFuncti
         }
 
         if (status) {
-            const parsedStatus = JSON.parse(status as string);
-            query.and([{ status: { $in: parsedStatus } }]);
+            query.and([{ status: { $regex: searchHelper(status as string) } }]);
         }
 
         if (location) {
