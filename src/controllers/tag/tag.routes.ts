@@ -4,7 +4,7 @@ import { Authorization, CheckRole } from '../../middlewares';
 
 export const TagRouter = Router();
 
-TagRouter.post('/create-tag', Authorization, CheckRole, Controller.createTag);
-TagRouter.put('/update-tag/:_id', Authorization, CheckRole, Controller.updateTag);
-TagRouter.delete('/delete-tag/:_id', Authorization, CheckRole, Controller.deleteTag);
-TagRouter.get('/get-tag-list', Authorization, CheckRole, Controller.getTagList);
+TagRouter.post('/create-tag', Authorization, Controller.createTag);
+TagRouter.put('/update-tag/:_id', Authorization, Controller.updateTag);
+TagRouter.delete('/delete-tag/:_id', Authorization, Controller.deleteTag);
+TagRouter.get('/get-tag-list', Authorization, Controller.getTagList);
