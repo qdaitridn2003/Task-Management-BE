@@ -19,7 +19,7 @@ export const createNotification = async (
             task: typeId,
             message,
             type: action,
-            employees: initEmployeeId ? [initEmployeeId] : null,
+            employees: initEmployeeId ? initEmployeeId : null,
         });
     } else {
         const result = await NotificationQuery.create({
