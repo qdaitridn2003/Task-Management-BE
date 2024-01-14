@@ -165,8 +165,7 @@ export const getListTask = async (req: Request, res: Response, next: NextFunctio
         }
 
         if (status) {
-            const parsedStatus = JSON.parse(status as string);
-            query.and([{ status: { $in: parsedStatus } }]);
+            query.and([{ status: { $regex: searchHelper(status as string) } }]);
         }
 
         const totalTask = await query.clone().countDocuments();
