@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import createHttpError from 'http-errors';
-import { TagQuery } from '../../models';
+import { TagQuery, TaskQuery } from '../../models';
 import { createHttpSuccess, paginationHelper, searchHelper } from '../../utilities';
 
 export const createTag = async (req: Request, res: Response, next: NextFunction) => {
@@ -35,6 +35,10 @@ export const updateTag = async (req: Request, res: Response, next: NextFunction)
 export const deleteTag = async (req: Request, res: Response, next: NextFunction) => {
     const { _id } = req.params;
     try {
+        const foundTagAtTask = await TaskQuery.findOne({ tag: _id });
+        if (foundTagAtTask?.status === 'upcoming' || foundTagAtTask?.status === 'ongoing')
+            return next(createHttpError(400, 'Không thể xoá thẻ này'));
+
         await TagQuery.deleteOne({ _id });
         return next(createHttpSuccess({ statusCode: 200, data: {}, message: 'Đã thành công' }));
     } catch (error) {
