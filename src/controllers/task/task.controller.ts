@@ -154,7 +154,7 @@ export const getListTask = async (req: Request, res: Response, next: NextFunctio
         const { amount, offset } = paginationHelper(limit as string, page as string);
         const query = TaskQuery.find()
             .select({ createdAt: false, updatedAt: false, deletedAt: false })
-            .sort({ createdAt: 'descending' });
+            .sort({ dateReminder: 'descending' });
 
         if (search) {
             query.and([{ name: { $regex: searchHelper(search as string) } }]);

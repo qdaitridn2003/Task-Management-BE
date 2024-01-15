@@ -13,7 +13,7 @@ const taskSchema = new Schema<TaskSchema>(
         dateReminder: { type: Schema.Types.Date },
         description: { type: Schema.Types.String },
         location: { type: Schema.Types.String },
-        status: { type: Schema.Types.String },
+        status: { type: Schema.Types.String, default: 'upcoming'},
         images: [{ type: Schema.Types.String, default: null }],
     },
     { timestamps: true },
