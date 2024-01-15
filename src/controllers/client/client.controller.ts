@@ -76,7 +76,10 @@ export const updateClientStatus = async (req: Request, res: Response, next: Next
         if (!foundClient) return next(createHttpError(404, 'Không tìm thấy khách hàng'));
 
         const foundClientAtEvent = await EventQuery.findOne({ client: _id });
-        if (status === 'disabled' && foundClientAtEvent) {
+        if (
+            status === 'disabled' &&
+            (foundClientAtEvent?.status === 'upcoming' || foundClientAtEvent?.status === 'ongoing')
+        ) {
             return next(createHttpError(400, 'Không thể thay đổi trạng thái khách hàng này'));
         }
         await ClientQuery.updateOne(

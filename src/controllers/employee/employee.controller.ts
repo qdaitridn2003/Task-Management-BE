@@ -89,7 +89,11 @@ export const updateEmployeeStatus = async (req: Request, res: Response, next: Ne
         if (!foundEmployee) return next(createHttpError(404, 'Nhân viên không tồn tại'));
 
         const foundEmployeeAtTask = await TaskQuery.findOne({ employees: _id });
-        if (foundEmployeeAtTask && status === 'disabled')
+        if (
+            status === 'disabled' &&
+            (foundEmployeeAtTask?.status === 'upcoming' ||
+                foundEmployeeAtTask?.status === 'ongoing')
+        )
             return next(createHttpError(400, 'Không thể vô hiệu hoá nhân viên này'));
 
         await EmployeeQuery.updateOne({ _id: foundEmployee }, { status });
